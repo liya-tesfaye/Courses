@@ -48,10 +48,8 @@ function addTodo() {
 
     buttons.appendChild(increaseButton);
     buttons.appendChild(decreaseButton);
-
     li.appendChild(name);
     li.appendChild(buttons);
-
     todoList.appendChild(li);
 
     todoInput.value = "";
@@ -69,7 +67,6 @@ function changePriority(todo, direction) {
     }
 
     todo.classList.remove(priorities[currentPriority]);
-
     todo.classList.add(priorities[newPriority]);
 }
 
