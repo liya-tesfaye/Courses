@@ -8,16 +8,14 @@ using namespace std;
 class graph
 {
     public:
-        graph( ifstream& gfile );   // constructor
-                                   // fill graph from data file
-                                   // file is already open
-        void bfs( int x );         // breadth-first node order
-        void bfssp( int x );       // breadth-first spanning tree
-        void dfs( int x );         // depth-first node order
-        void dfssp( int x );       // depth-first spanning tree
-        void mprint();             // print representation
+        graph( ifstream& gfile );
+        void bfs( int x );
+        void bfssp( int x );
+        void dfs( int x );
+        void dfssp( int x );
+        void mprint();
         void dijkstra(int x);
-        void prim(int x);    
+        void prim(int x);
         void kruskal();
     private:
                 int vertice;
@@ -28,8 +26,6 @@ class graph
 
 graph::graph( ifstream& gfile )
 {
-//      fscanf(gfile, "%d ", &vertice);
-//      fscanf(gfile, "%d ", &lines);
         gfile >> vertice;
         gfile >> lines;
 
@@ -37,7 +33,6 @@ graph::graph( ifstream& gfile )
 
         for(int i = 0; i < lines; i++)
         {
-//              fscanf(gfile, "%d %d %d", &a , &b, &val);
                 gfile >> a >> b >> val;
                 arr[a][b] = val;
                 arr[b][a] = val;
@@ -261,14 +256,11 @@ void graph::prim(int x)
             }
         }
 
-        // No more reachable vertices
         if(v == 0)
             break;
 
-        // Add vertex to the tree
         known[v] = true;
 
-        // Print selected edge
         if(prev[v] != 0)
         {
             cout << prev[v] << "-" << v
@@ -277,7 +269,6 @@ void graph::prim(int x)
             total += dist[v];
         }
 
-        // Update adjacent vertices
         for(int w = 1; w <= vertice; w++)
         {
             if(arr[v][w] && !known[w])
@@ -301,12 +292,9 @@ void graph::kruskal()
 
     int parent[101];
 
-    // Initialize parent array
     for(int i = 1; i <= vertice; i++)
         parent[i] = i;
 
-    // Get all edges from adjacency matrix
-    // i < j ensures smaller vertex comes first
     for(int i = 1; i <= vertice; i++)
     {
         for(int j = i + 1; j <= vertice; j++)
@@ -321,7 +309,6 @@ void graph::kruskal()
         }
     }
 
-    // Sort edges by weight (ascending)
     for(int i = 0; i < edges - 1; i++)
     {
         for(int j = 0; j < edges - i - 1; j++)
@@ -350,25 +337,21 @@ void graph::kruskal()
 
     cout << "\nKruskal:" << endl;
 
-    // Process edges in increasing weight order
     for(int i = 0; i < edges; i++)
     {
         int a = edgeStart[i];
         int b = edgeEnd[i];
 
-        // Find root of first vertex
         int rootA = a;
 
         while(parent[rootA] != rootA)
             rootA = parent[rootA];
 
-        // Find root of second vertex
         int rootB = b;
 
         while(parent[rootB] != rootB)
             rootB = parent[rootB];
 
-        // If roots are different, adding edge won't create a cycle
         if(rootA != rootB)
         {
             parent[rootB] = rootA;
@@ -390,7 +373,6 @@ int main( int argc, char *argv[] )
 {
     ifstream ifp;
 
-    //checking if file was entered on command line
     if ( argc != 2 )
     {
         cout << "File was not supplied\n";
@@ -399,17 +381,14 @@ int main( int argc, char *argv[] )
 
     ifp.open( argv[1] );
 
-    // checking if file was opened successfully
     if( ! ifp.is_open() )
     {
         cout << "File could not be opened\n";
         return 3;
     }
 
-    //create graph based on graph description file
     graph g( ifp );
 
-    //print the matrix
     g.mprint();
     cout << endl << endl;
 
