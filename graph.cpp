@@ -18,6 +18,7 @@ class graph
         void mprint();             // print representation
         void dijkstra(int x);
         void prim(int x);    
+        void kruskal();
     private:
                 int vertice;
                 int lines;
@@ -291,6 +292,99 @@ void graph::prim(int x)
     }
      cout << "Total cost: " << total << endl;
 }
+void graph::kruskal()
+{
+    int edgeStart[5000];
+    int edgeEnd[5000];
+    int edgeWeight[5000];
+    int edges = 0;
+
+    int parent[101];
+
+    // Initialize parent array
+    for(int i = 1; i <= vertice; i++)
+        parent[i] = i;
+
+    // Get all edges from adjacency matrix
+    // i < j ensures smaller vertex comes first
+    for(int i = 1; i <= vertice; i++)
+    {
+        for(int j = i + 1; j <= vertice; j++)
+        {
+            if(arr[i][j])
+            {
+                edgeStart[edges] = i;
+                edgeEnd[edges] = j;
+                edgeWeight[edges] = arr[i][j];
+                edges++;
+            }
+        }
+    }
+
+    // Sort edges by weight (ascending)
+    for(int i = 0; i < edges - 1; i++)
+    {
+        for(int j = 0; j < edges - i - 1; j++)
+        {
+            if(edgeWeight[j] > edgeWeight[j + 1])
+            {
+                int temp;
+
+                temp = edgeWeight[j];
+                edgeWeight[j] = edgeWeight[j + 1];
+                edgeWeight[j + 1] = temp;
+
+                temp = edgeStart[j];
+                edgeStart[j] = edgeStart[j + 1];
+                edgeStart[j + 1] = temp;
+
+                temp = edgeEnd[j];
+                edgeEnd[j] = edgeEnd[j + 1];
+                edgeEnd[j + 1] = temp;
+            }
+        }
+    }
+
+    int total = 0;
+    int selected = 0;
+
+    cout << "\nKruskal:" << endl;
+
+    // Process edges in increasing weight order
+    for(int i = 0; i < edges; i++)
+    {
+        int a = edgeStart[i];
+        int b = edgeEnd[i];
+
+        // Find root of first vertex
+        int rootA = a;
+
+        while(parent[rootA] != rootA)
+            rootA = parent[rootA];
+
+        // Find root of second vertex
+        int rootB = b;
+
+        while(parent[rootB] != rootB)
+            rootB = parent[rootB];
+
+        // If roots are different, adding edge won't create a cycle
+        if(rootA != rootB)
+        {
+            parent[rootB] = rootA;
+
+            cout << a << "-" << b
+                 << " Cost: " << edgeWeight[i] << endl;
+
+            total += edgeWeight[i];
+            selected++;
+
+            if(selected == vertice - 1)
+                break;
+        }
+    }
+    cout << "Total MST cost: " << total << endl;
+}
 
 int main( int argc, char *argv[] )
 {
@@ -330,5 +424,6 @@ int main( int argc, char *argv[] )
         g.bfssp(N);
         g.dijkstra(N);
         g.prim(N);
+        g.kruskal();
         return 0;
 }
