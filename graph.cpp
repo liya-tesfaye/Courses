@@ -16,8 +16,8 @@ class graph
         void dfs( int x );         // depth-first node order
         void dfssp( int x );       // depth-first spanning tree
         void mprint();             // print representation
-                void dijkstra(int x);
-                void prim(int x);
+        void dijkstra(int x);
+        void prim(int x);    
     private:
                 int vertice;
                 int lines;
@@ -229,6 +229,69 @@ void graph::dijkstra(int x)
                 }
 }
 
+void graph::prim(int x)
+{
+    int dist[101];
+    int prev[101] = {0};
+    bool known[101] = {false};
+    int total = 0;
+
+    // Initialize distances
+    for(int i = 1; i <= vertice; i++)
+        dist[i] = 999999;
+
+    // Starting vertex
+    dist[x] = 0;
+
+    cout << "\nPrim: " << endl;
+
+    while(true)
+    {
+        int v = 0;
+        int smallest = 999999;
+
+        // Find the unknown vertex with the smallest edge cost
+        for(int i = 1; i <= vertice; i++)
+        {
+            if(!known[i] && dist[i] < smallest)
+            {
+                smallest = dist[i];
+                v = i;
+            }
+        }
+
+        // No more reachable vertices
+        if(v == 0)
+            break;
+
+        // Add vertex to the tree
+        known[v] = true;
+
+        // Print selected edge
+        if(prev[v] != 0)
+        {
+            cout << prev[v] << "-" << v
+                 << " Cost: " << dist[v] << endl;
+
+            total += dist[v];
+        }
+
+        // Update adjacent vertices
+        for(int w = 1; w <= vertice; w++)
+        {
+            if(arr[v][w] && !known[w])
+            {
+                if(arr[v][w] < dist[w])
+                {
+                    dist[w] = arr[v][w];
+                    prev[w] = v;
+                }
+            }
+        }
+    }
+     cout << "Total cost: " << total << endl;
+}
+
 int main( int argc, char *argv[] )
 {
     ifstream ifp;
@@ -266,5 +329,6 @@ int main( int argc, char *argv[] )
         g.dfssp(N);
         g.bfssp(N);
         g.dijkstra(N);
+        g.prim(N);
         return 0;
 }
